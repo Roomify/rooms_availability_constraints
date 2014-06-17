@@ -1,13 +1,19 @@
 <?php
 
+/**
+ * @file
+ * Main hooks and API functions for Rooms Availability Constraints module.
+ */
+
 module_load_include('inc', 'rooms_availability_constraints', 'rooms_availability_constraints.field');
 
-define('ROOMS_AVAILABILITY_CONSTRAINT_MUST_START', 'must');
-define('ROOMS_AVAILABILITY_CONSTRAINT_IF_STARTS', 'if');
-define('ROOMS_AVAILABILITY_CONSTRAINT_NO_DAY', 'none');
+define('ROOMS_AVAILABILITY_CONSTRAINTS_MUST_START', 'must');
+define('ROOMS_AVAILABILITY_CONSTRAINTS_IF_STARTS', 'if');
+define('ROOMS_AVAILABILITY_CONSTRAINTS_NO_DAY', 'none');
 
 /**
  * Implements hook_form_FORM_ID_alter().
+ *
  * FORM_ID = rooms_unit_type_form
  */
 function rooms_availability_constraints_form_rooms_unit_type_form_alter(&$form, &$form_state, $form_id) {
@@ -31,14 +37,14 @@ function rooms_availability_constraints_form_rooms_unit_type_form_alter(&$form, 
     '#type' => 'checkbox',
     '#title' => t('Enable availability range constraints per unit'),
     '#default_value' => variable_get('rooms_availability_constraints_unit_' . $unit_type->type, 0),
-    '#description' => t('This will allow you to define a minimum or maximum booking period for each unit of this type. If you disable this feature, all the stored data will be removed')
+    '#description' => t('This will allow you to define a minimum or maximum booking period for each unit of this type. If you disable this feature, all the stored data will be removed'),
   );
 
   $form['availability_constraints']['rooms_availability_range_type'] = array(
     '#type' => 'checkbox',
     '#title' => t('Enable availability range constraints for all units of this type'),
     '#default_value' => variable_get('rooms_availability_constraints_type_' . $unit_type->type, 0),
-    '#description' => t('This will allow you to define a minimum or maximum booking period for all units of this type. If you disable this feature, all the stored data will be removed')
+    '#description' => t('This will allow you to define a minimum or maximum booking period for all units of this type. If you disable this feature, all the stored data will be removed'),
   );
 
   if (variable_get('rooms_availability_constraints_type_' . $unit_type->type, 0) == 0) {
@@ -129,7 +135,7 @@ function rooms_availability_constraints_rooms_booking_availabilityagent_filter()
       'label' => t('Availability range'),
       'handler' => array(
         'class' => 'AvailabilityAgentDurationFilter',
-      )
+      ),
     ),
   );
 }
@@ -146,18 +152,21 @@ function rooms_availability_constraints_element_info() {
   return $elements;
 }
 
+/**
+ * Generates the 'rooms_availability_range' Form API element.
+ */
 function rooms_availability_range_process($element, $form_state, $complete_form) {
   $range = rooms_date_range_fields();
 
   $always_id = drupal_html_id('rooms-constraints-range-always');
-  $constraint_type_id =  drupal_html_id('rooms-constraints-range-type');
+  $constraint_type_id = drupal_html_id('rooms-constraints-range-type');
   $element['always'] = array(
-    '#type' =>  'checkbox',
+    '#type' => 'checkbox',
     '#title' => t('Always'),
-    '#default_value' =>  isset($element['#value']['always']) ? $element['#value']['always'] : '',
+    '#default_value' => isset($element['#value']['always']) ? $element['#value']['always'] : '',
     '#attributes' => array(
       'id' => $always_id,
-    )
+    ),
   );
 
   $element['start_date'] = array(
@@ -185,11 +194,11 @@ function rooms_availability_range_process($element, $form_state, $complete_form)
   $element['constraint_type'] = array(
     '#type' => 'select',
     '#options' => array(
-      ROOMS_AVAILABILITY_CONSTRAINT_NO_DAY => t('No day of the week related constraint'),
-      ROOMS_AVAILABILITY_CONSTRAINT_IF_STARTS => t('If booking starts on'),
-      ROOMS_AVAILABILITY_CONSTRAINT_MUST_START => t('booking must start on'),
+      ROOMS_AVAILABILITY_CONSTRAINTS_NO_DAY => t('No day of the week related constraint'),
+      ROOMS_AVAILABILITY_CONSTRAINTS_IF_STARTS => t('If booking starts on'),
+      ROOMS_AVAILABILITY_CONSTRAINTS_MUST_START => t('booking must start on'),
     ),
-    '#default_value' =>  isset($element['#value']['constraint_type']) ? $element['#value']['constraint_type'] : '',
+    '#default_value' => isset($element['#value']['constraint_type']) ? $element['#value']['constraint_type'] : '',
     '#attributes' => array(
       'id' => $constraint_type_id,
     ),
@@ -203,10 +212,10 @@ function rooms_availability_range_process($element, $form_state, $complete_form)
     '#default_value' => isset($element['#value']['start_day']) ? $element['#value']['start_day'] : '',
     '#states' => array(
       'invisible' => array(
-        ':input[id="' . $constraint_type_id . '"]' => array('value' => ROOMS_AVAILABILITY_CONSTRAINT_NO_DAY),
+        ':input[id="' . $constraint_type_id . '"]' => array('value' => ROOMS_AVAILABILITY_CONSTRAINTS_NO_DAY),
       ),
     ),
-    '#suffix' => '</div>'
+    '#suffix' => '</div>',
   );
 
   $element['minimum_stay'] = array(
@@ -231,9 +240,7 @@ function rooms_availability_range_process($element, $form_state, $complete_form)
 }
 
 /**
- * Validation callback for rooms_availability_range form element.
- * @param $element
- * @param $form_state
+ * Validation callback for rooms_availability_range Form API element.
  */
 function rooms_availability_range_validate($element, &$form_state) {
   $columns = array('minimum_stay', 'maximum_stay', 'start_day');

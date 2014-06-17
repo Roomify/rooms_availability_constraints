@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Field type declarations and hooks for Rooms Availability Constraints module.
+ */
+
+/**
  * Implements hook_field_info().
  */
 function rooms_availability_constraints_field_info() {
@@ -134,8 +139,8 @@ function rooms_availability_constraints_field_widget_form(&$form, &$form_state, 
         ),
         '#attached' => array(
           'js' => array(
-            drupal_get_path('module', 'rooms_availability_constraints') . '/js/rooms_availability_constraints_range.js'
-          )
+            drupal_get_path('module', 'rooms_availability_constraints') . '/js/rooms_availability_constraints_range.js',
+          ),
         ),
       );
     }
@@ -168,7 +173,7 @@ function rooms_availability_constraints_field_validate($entity_type, $entity, $f
         }
       }
 
-      if (!empty($item['maximum_stay'])){
+      if (!empty($item['maximum_stay'])) {
         if (!((int) $item['maximum_stay'] == $item['maximum_stay'] && (int) $item['maximum_stay'] > 0)) {
           $errors[$field['field_name']][$langcode][$delta][] = array(
             'error' => 'rooms_availability_constraints_maximum_stay',
@@ -183,7 +188,7 @@ function rooms_availability_constraints_field_validate($entity_type, $entity, $f
       if ($maximum_set && $minimum_set && ($item['minimum_stay'] > $item['maximum_stay'])) {
         $errors[$field['field_name']][$langcode][$delta][] = array(
           'error' => 'rooms_availability_constraints_range',
-          'message' => t('Minimum stay can\'t be longer than maximum stay'),
+          'message' => t("Minimum stay can't be longer than maximum stay"),
         );
       }
     }

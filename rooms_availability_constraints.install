@@ -3,7 +3,7 @@
 /**
  * @file
  * Install for Rooms Availability module - sets up the main Rooms Availability
- * table
+ * table.
  */
 
 /**
@@ -47,8 +47,17 @@ function rooms_availability_constraints_field_schema($field) {
         ),
       ),
       'indexes' => array(
-        'range' => array('start_date', 'end_date', 'minimum_stay', 'maximum_stay'),
-        'range_day' => array('start_date', 'end_date', 'minimum_stay', 'maximum_stay', 'start_day'),
+        'range' => array(
+          'start_date',
+          'end_date',
+          'minimum_stay',
+          'maximum_stay'),
+        'range_day' => array(
+          'start_date',
+          'end_date',
+          'minimum_stay',
+          'maximum_stay',
+          'start_day'),
       ),
     );
   }

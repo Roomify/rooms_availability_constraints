@@ -97,7 +97,7 @@ class AvailabilityAgentDurationFilter extends AvailabilityAgentCommonFilter {
   protected function applyMustDayFilter($entity_type) {
     $query = $this->basicFilter($entity_type);
 
-    $query->fieldCondition('rooms_constraints_range', 'constraint_type', ROOMS_AVAILABILITY_CONSTRAINT_MUST_START, '=', 'rooms_availability_constraints');
+    $query->fieldCondition('rooms_constraints_range', 'constraint_type', ROOMS_AVAILABILITY_CONSTRAINTS_MUST_START, '=', 'rooms_availability_constraints');
     $query->fieldCondition('rooms_constraints_range', 'start_day', $this->start_date->format('N'), '!=', 'rooms_availability_constraints');
 
     $this->filterResults($entity_type, $query);
@@ -142,7 +142,7 @@ class AvailabilityAgentDurationFilter extends AvailabilityAgentCommonFilter {
       $this->basicUnitFilterConditions($query);
     }
     else {
-       $this->basicUnitTypeFilterConditions($query);
+      $this->basicUnitTypeFilterConditions($query);
     }
 
     return $query;
@@ -257,7 +257,7 @@ class AvailabilityAgentDurationFilter extends AvailabilityAgentCommonFilter {
   protected function applyIfDayRangeFilter($entity_type, $duration_filter = self::MINIMUM_DURATION_FILTER) {
     $query = $this->durationFilter($entity_type, $duration_filter);
 
-    $query->fieldCondition('rooms_constraints_range', 'constraint_type', ROOMS_AVAILABILITY_CONSTRAINT_IF_STARTS, '=', 'rooms_availability_constraints');
+    $query->fieldCondition('rooms_constraints_range', 'constraint_type', ROOMS_AVAILABILITY_CONSTRAINTS_IF_STARTS, '=', 'rooms_availability_constraints');
     $query->fieldCondition('rooms_constraints_range', 'start_day', $this->start_date->format('N'), '=', 'rooms_availability_constraints');
 
     $this->filterResults($entity_type, $query);
