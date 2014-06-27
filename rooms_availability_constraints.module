@@ -207,8 +207,7 @@ function rooms_availability_range_process($element, $form_state, $complete_form)
 
   $element['start_day'] = array(
     '#type' => 'select',
-    '#options' => array(1 => t('Monday'), 2 => t('Tuesday'), 3 => t('Wednesday'), 4 => t('Thursday'), 5 => t('Friday'), 6 => t('Saturday'),7 => t('Sunday')),
-    '#empty_option' => t('No constraint'),
+    '#options' => rooms_availability_constraints_weekdays(),
     '#default_value' => isset($element['#value']['start_day']) ? $element['#value']['start_day'] : '',
     '#states' => array(
       'invisible' => array(
@@ -254,4 +253,35 @@ function rooms_availability_range_validate($element, &$form_state) {
     form_set_value($element['start_date'], '1970-01-01', $form_state);
     form_set_value($element['end_date'], '2999-12-31', $form_state);
   }
+}
+
+/**
+ * Returns weekdays keyed in N format.
+ *
+ * @return array
+ *   The readable weekdays keyed by N format.
+ */
+function rooms_availability_constraints_weekdays() {
+  return array(
+    1 => t('Monday'),
+    2 => t('Tuesday'),
+    3 => t('Wednesday'),
+    4 => t('Thursday'),
+    5 => t('Friday'),
+    6 => t('Saturday'),
+    7 => t('Sunday')
+  );
+}
+
+/**
+ * Gives the human readable weekday given its N identifier.
+ *
+ * @param int $day
+ *   The weekday identifier.
+ * @return string
+ *   The human readable weekday.
+ */
+function rooms_availability_constraints_get_weekday($day) {
+  $weekdays = rooms_availability_constraints_weekdays();
+  return isset($weekdays[$day]) ? $weekdays[$day] : '';
 }
