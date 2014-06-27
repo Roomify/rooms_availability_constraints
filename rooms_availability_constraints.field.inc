@@ -142,6 +142,9 @@ function rooms_availability_constraints_field_widget_form(&$form, &$form_state, 
           'js' => array(
             drupal_get_path('module', 'rooms_availability_constraints') . '/js/rooms_availability_constraints_range.js',
           ),
+          'css' => array(
+            drupal_get_path('module', 'rooms_availability_constraints') . '/css/rooms_availability_constraints_range.css',
+          )
         ),
       );
     }
