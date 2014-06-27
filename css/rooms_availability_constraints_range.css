@@ -1,4 +1,17 @@
+.group--conditions{
+  float: left;
+  margin-right: 20px;
+  margin-bottom: 10px;
+}
+.group--limits {
+  float: right;
+  margin-bottom: 10px;
+}
 .field-widget-rooms-availability-constraints-range .rooms-availability-range--remove-button {
   clear: both;
   float: right;
+}
+
+.field-widget-rooms-availability-constraints-range .container-inline {
+  clear: both;
 }

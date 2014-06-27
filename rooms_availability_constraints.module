@@ -161,12 +161,12 @@ function rooms_availability_range_process($element, $form_state, $complete_form)
   $always_id = drupal_html_id('rooms-constraints-range-always');
   $constraint_type_id = drupal_html_id('rooms-constraints-range-type');
 
-  $element['conditions'] = array(
-    '#type' => 'fieldset',
-    '#tree' => FALSE,
+  $element['group_conditions--start'] = array(
+    '#type' => 'markup',
+    '#markup' => '<div class="group--conditions">',
   );
 
-  $element['conditions']['always'] = array(
+  $element['always'] = array(
     '#type' => 'checkbox',
     '#prefix' => '<strong>' . t('Under the following conditions:') . '</strong>'
       . '<div id="' . $always_id . '">',
@@ -175,7 +175,7 @@ function rooms_availability_range_process($element, $form_state, $complete_form)
     '#suffix' => '</div>',
   );
 
-  $element['conditions']['start_date'] = array(
+  $element['start_date'] = array(
     '#title' => t('Start date'),
     '#required' => FALSE,
     '#default_value' => (isset($element['#value']['start_date']) && empty($element['#value']['always'])) ? $element['#value']['start_date'] : '',
@@ -186,7 +186,7 @@ function rooms_availability_range_process($element, $form_state, $complete_form)
     ),
   ) + $range['rooms_start_date'];
 
-  $element['conditions']['end_date'] = array(
+  $element['end_date'] = array(
     '#title' => t('End date'),
     '#required' => FALSE,
     '#default_value' => (isset($element['#value']['end_date']) && empty($element['#value']['always'])) ? $element['#value']['end_date'] : '',
@@ -197,7 +197,7 @@ function rooms_availability_range_process($element, $form_state, $complete_form)
     ),
   ) + $range['rooms_end_date'];
 
-  $element['conditions']['constraint_type'] = array(
+  $element['constraint_type'] = array(
     '#type' => 'select',
     '#options' => array(
       ROOMS_AVAILABILITY_CONSTRAINTS_NO_DAY => t('No day of the week related constraint.'),
@@ -211,7 +211,7 @@ function rooms_availability_range_process($element, $form_state, $complete_form)
     '#prefix' => '<div class="container-inline">',
   );
 
-  $element['conditions']['start_day'] = array(
+  $element['start_day'] = array(
     '#type' => 'select',
     '#options' => rooms_availability_constraints_weekdays(),
     '#default_value' => isset($element['#value']['start_day']) ? $element['#value']['start_day'] : '',
@@ -223,12 +223,16 @@ function rooms_availability_range_process($element, $form_state, $complete_form)
     '#suffix' => '</div>',
   );
 
-  $element['limits'] = array(
-    '#type' => 'fieldset',
-    '#tree' => FALSE,
+  $element['group_conditions--end'] = array(
+    '#type' => 'markup',
+    '#markup' => '</div>',
+  );
+  $element['group_limits--start'] = array(
+    '#type' => 'markup',
+    '#markup' => '<div class="group--limits">',
   );
 
-  $element['limits']['minimum_stay'] = array(
+  $element['minimum_stay'] = array(
     '#type' => 'textfield',
     '#field_prefix' => '<strong>' . t('Require a minimum stay of:') . '</strong>',
     '#field_suffix' => t('days'),
@@ -237,7 +241,7 @@ function rooms_availability_range_process($element, $form_state, $complete_form)
     '#description' => t('And/Or:'),
   );
 
-  $element['limits']['maximum_stay'] = array(
+  $element['maximum_stay'] = array(
     '#type' => 'textfield',
     '#field_prefix' => '<strong>' .t('Limit the maximum stay to:') . '</strong>',
     '#field_suffix' => t('days'),
@@ -245,6 +249,12 @@ function rooms_availability_range_process($element, $form_state, $complete_form)
     '#default_value' => isset($element['#value']['maximum_stay']) ? $element['#value']['maximum_stay'] : '',
     '#description' => t('(Enter an integer; Specify 0 or leave empty for no constraint.)'),
   );
+
+  $element['group_conditions--end'] = array(
+    '#type' => 'markup',
+    '#markup' => '</div>',
+  );
+
 
   $element['#element_validate'][] = 'rooms_availability_range_validate';
 
