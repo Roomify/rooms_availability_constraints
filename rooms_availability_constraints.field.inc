@@ -39,10 +39,11 @@ function rooms_availability_constraints_range_property_info_callback(&$info, $en
 }
 
 /**
- * Defines info for the properties of the video_embed_field data structure.
+ * Defines info for the properties of the Availability Constraints Range
+ * data structure.
  */
 function rooms_availability_constraints_range_data_property_info($name = NULL) {
-  // Build an array of basic property information for video_embed_field.
+  // Build an array of properties for an Availability Constraints Range.
   $properties = array(
     'start_date' => array(
       'label' => 'Start date',
@@ -88,7 +89,7 @@ function rooms_availability_constraints_range_data_property_info($name = NULL) {
     ),
   );
 
-  // Add the default values for each of the video_embed_field properties.
+  // Add the default values for each property.
   foreach ($properties as &$value) {
     $value += array(
       'description' => !empty($name) ? t('!label of field %name', array('!label' => $value['label'], '%name' => $name)) : '',
