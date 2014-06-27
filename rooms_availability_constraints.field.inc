@@ -136,7 +136,7 @@ function rooms_availability_constraints_field_widget_form(&$form, &$form_state, 
         '#value' => t('Remove'),
         '#weight' => 100,
         '#attributes' => array(
-          'class' => array('remove-booking-option'),
+          'class' => array('rooms-availability-range--remove-button'),
         ),
         '#attached' => array(
           'js' => array(
