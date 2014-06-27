@@ -168,12 +168,11 @@ function rooms_availability_range_process($element, $form_state, $complete_form)
 
   $element['conditions']['always'] = array(
     '#type' => 'checkbox',
-    '#prefix' => '<strong>' . t('Under the following conditions:') . '</strong>',
+    '#prefix' => '<strong>' . t('Under the following conditions:') . '</strong>'
+      . '<div id="' . $always_id . '">',
     '#title' => t('Always'),
     '#default_value' => isset($element['#value']['always']) ? $element['#value']['always'] : '',
-    '#attributes' => array(
-      'id' => $always_id,
-    ),
+    '#suffix' => '</div>',
   );
 
   $element['conditions']['start_date'] = array(
@@ -182,7 +181,7 @@ function rooms_availability_range_process($element, $form_state, $complete_form)
     '#default_value' => (isset($element['#value']['start_date']) && empty($element['#value']['always'])) ? $element['#value']['start_date'] : '',
     '#states' => array(
       'visible' => array(
-        ':input[id="' . $always_id . '"]' => array('checked' => FALSE),
+        '#' . $always_id . ' input' => array('checked' => FALSE),
       ),
     ),
   ) + $range['rooms_start_date'];
@@ -193,7 +192,7 @@ function rooms_availability_range_process($element, $form_state, $complete_form)
     '#default_value' => (isset($element['#value']['end_date']) && empty($element['#value']['always'])) ? $element['#value']['end_date'] : '',
     '#states' => array(
       'visible' => array(
-        ':input[id="' . $always_id . '"]' => array('checked' => FALSE),
+        '#' . $always_id . ' input' => array('checked' => FALSE),
       ),
     ),
   ) + $range['rooms_end_date'];
