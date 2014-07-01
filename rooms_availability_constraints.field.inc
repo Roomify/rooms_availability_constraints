@@ -161,7 +161,7 @@ function rooms_availability_constraints_field_validate($entity_type, $entity, $f
       if ($item['start_date'] >= $item['end_date']) {
         $errors[$field['field_name']][$langcode][$delta][] = array(
           'error' => 'rooms_availability_constraints_end_date',
-          'message' => t('End date must be greater than start date'),
+          'message' => t('The end date must be greater than the start date.'),
         );
       }
       $minimum_set = $maximum_set = FALSE;
@@ -169,7 +169,7 @@ function rooms_availability_constraints_field_validate($entity_type, $entity, $f
         if (!((int) $item['minimum_stay'] == $item['minimum_stay'] && (int) $item['minimum_stay'] > 0)) {
           $errors[$field['field_name']][$langcode][$delta][] = array(
             'error' => 'rooms_availability_constraints_minimum_stay',
-            'message' => t('Minimum stay value must be a positive integer value'),
+            'message' => t('The minimum stay must be a positive integer or zero (0).'),
           );
         }
         else {
@@ -181,7 +181,7 @@ function rooms_availability_constraints_field_validate($entity_type, $entity, $f
         if (!((int) $item['maximum_stay'] == $item['maximum_stay'] && (int) $item['maximum_stay'] > 0)) {
           $errors[$field['field_name']][$langcode][$delta][] = array(
             'error' => 'rooms_availability_constraints_maximum_stay',
-            'message' => t('Maximum stay value must be a positive integer value'),
+            'message' => t('The maximum stay must be a positive integer or zero (0).'),
           );
         }
         else {
@@ -192,7 +192,7 @@ function rooms_availability_constraints_field_validate($entity_type, $entity, $f
       if ($maximum_set && $minimum_set && ($item['minimum_stay'] > $item['maximum_stay'])) {
         $errors[$field['field_name']][$langcode][$delta][] = array(
           'error' => 'rooms_availability_constraints_range',
-          'message' => t("Minimum stay can't be longer than maximum stay"),
+          'message' => t("The minimum stay cannot be longer than maximum stay."),
         );
       }
     }
