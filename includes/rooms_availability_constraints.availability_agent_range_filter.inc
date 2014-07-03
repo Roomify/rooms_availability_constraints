@@ -157,9 +157,9 @@ class AvailabilityAgentDurationFilter extends AvailabilityAgentCommonFilter {
     $query->propertyCondition('bookable', 1);
     if (!empty($this->excluded_units)) {
       $query->propertyCondition('unit_id', $this->excluded_units, 'NOT IN');
-      if (!empty($this->excluded_unit_types)) {
-        $query->propertyCondition('bundle', $this->excluded_unit_types, 'NOT IN');
-      }
+    }
+    if (!empty($this->excluded_unit_types)) {
+      $query->propertyCondition('type', $this->excluded_unit_types, 'NOT IN');
     }
   }
 
