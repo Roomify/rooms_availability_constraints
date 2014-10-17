@@ -25,6 +25,11 @@ INSTALLATION
 ------------
 Simply download and activate the module.
 
+Rooms Availability constraints requires:
+
+rooms_availability (>=1.3)
+rooms_booking (>=1.3)
+
 CONFIGURATION
 -------------
 After activating the module visit the rooms unit type configuration page for
