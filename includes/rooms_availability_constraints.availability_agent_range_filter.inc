@@ -3,7 +3,7 @@
 /**
  * Filter by group_size and group_size_children.
  */
-class AvailabilityAgentDurationFilter extends AvailabilityAgentCommonFilter {
+class AvailabilityAgentDurationFilter extends AvailabilityAgentFilterBase {
 
   const MINIMUM_DURATION_FILTER = 'minimum';
   const MAXIMUM_DURATION_FILTER = 'maximum';
