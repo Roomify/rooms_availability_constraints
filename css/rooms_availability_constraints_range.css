@@ -15,3 +15,8 @@
 .field-widget-rooms-availability-constraints-range .container-inline {
   clear: both;
 }
+
+.field-widget-rooms-availability-constraints-range .ajax-progress {
+	float: right;
+	margin: 5px 10px 0 0;
+}
