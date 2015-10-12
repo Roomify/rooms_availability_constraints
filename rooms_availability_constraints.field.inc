@@ -103,7 +103,16 @@ function rooms_availability_constraints_range_data_property_info($name = NULL) {
  * Implements hook_field_is_empty().
  */
 function rooms_availability_constraints_field_is_empty($item, $field) {
-  return !is_string($item['start_date']) || !is_string($item['start_date']);
+  if ($item['group_conditions']['operation'] == 0) {
+    return TRUE;
+  }
+  elseif ($item['group_conditions']['operation'] == 1) {
+    if (!($item['group_conditions']['minimum_stay']) && !($item['group_conditions']['maximum_stay'])) {
+      return TRUE;
+    }
+  }
+
+  return FALSE;
 }
 
 /**
@@ -166,16 +175,20 @@ function rooms_availability_constraints_field_widget_form(&$form, &$form_state, 
  */
 function rooms_availability_constraints_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
   foreach ($items as $delta => $item) {
-    if (is_array($item) && isset($item['start_date']) && isset($item['end_date'])) {
-      if ($item['start_date'] >= $item['end_date']) {
-        $errors[$field['field_name']][$langcode][$delta][] = array(
-          'error' => 'rooms_availability_constraints_end_date',
-          'message' => t('The end date must be greater than the start date.'),
-        );
+    if (is_array($item)) {
+      if (isset($item['group_conditions']['start_date']) && isset($item['group_conditions']['end_date'])) {
+        if ($item['group_conditions']['start_date'] >= $item['group_conditions']['end_date']) {
+          $errors[$field['field_name']][$langcode][$delta][] = array(
+            'error' => 'rooms_availability_constraints_end_date',
+            'message' => t('The end date must be greater than the start date.'),
+          );
+        }
       }
+
       $minimum_set = $maximum_set = FALSE;
-      if (!empty($item['minimum_stay'])) {
-        if (!((int) $item['minimum_stay'] == $item['minimum_stay'] && (int) $item['minimum_stay'] > 0)) {
+      if (!empty($item['group_conditions']['minimum_stay_nights'])) {
+        if (!((int) $item['group_conditions']['minimum_stay_nights'] == $item['group_conditions']['minimum_stay_nights'] &&
+              (int) $item['group_conditions']['minimum_stay_nights'] > 0)) {
           $errors[$field['field_name']][$langcode][$delta][] = array(
             'error' => 'rooms_availability_constraints_minimum_stay',
             'message' => t('The minimum stay must be a positive integer or zero (0).'),
@@ -186,8 +199,9 @@ function rooms_availability_constraints_field_validate($entity_type, $entity, $f
         }
       }
 
-      if (!empty($item['maximum_stay'])) {
-        if (!((int) $item['maximum_stay'] == $item['maximum_stay'] && (int) $item['maximum_stay'] > 0)) {
+      if (!empty($item['group_conditions']['maximum_stay_nights'])) {
+        if (!((int) $item['group_conditions']['maximum_stay_nights'] == $item['group_conditions']['maximum_stay_nights'] &&
+              (int) $item['group_conditions']['maximum_stay_nights'] > 0)) {
           $errors[$field['field_name']][$langcode][$delta][] = array(
             'error' => 'rooms_availability_constraints_maximum_stay',
             'message' => t('The maximum stay must be a positive integer or zero (0).'),
@@ -198,7 +212,7 @@ function rooms_availability_constraints_field_validate($entity_type, $entity, $f
         }
       }
 
-      if ($maximum_set && $minimum_set && ($item['minimum_stay'] > $item['maximum_stay'])) {
+      if ($maximum_set && $minimum_set && ($item['group_conditions']['minimum_stay_nights'] > $item['group_conditions']['maximum_stay_nights'])) {
         $errors[$field['field_name']][$langcode][$delta][] = array(
           'error' => 'rooms_availability_constraints_range',
           'message' => t("The minimum stay cannot be longer than maximum stay."),
