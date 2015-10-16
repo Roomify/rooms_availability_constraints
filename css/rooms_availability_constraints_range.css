@@ -8,7 +8,7 @@
   float: right;
 }
 
-.field-widget-rooms-availability-constraints-range input[name="add_min_max"] {
+.field-widget-rooms-availability-constraints-range input[name^="add_min_max"] {
   display: block !important;
 }
 

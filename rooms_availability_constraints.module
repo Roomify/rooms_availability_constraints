@@ -262,7 +262,7 @@ function rooms_availability_range_process($element, $form_state, $complete_form)
     '#validate' => array(),
     '#limit_validation_errors' => array(),
     '#executes_submit_callback' => FALSE,
-    '#name' => 'add_min_max',
+    '#name' => 'add_min_max_' . $delta,
   );
 
   $element['group_conditions']['add_checkin_day'] = array(
@@ -276,7 +276,7 @@ function rooms_availability_range_process($element, $form_state, $complete_form)
     '#validate' => array(),
     '#limit_validation_errors' => array(),
     '#executes_submit_callback' => FALSE,
-    '#name' => 'add_checkin_day',
+    '#name' => 'add_checkin_day_' . $delta,
   );
 
   if ($element['group_conditions']['operation']['#value'] != 0) {
