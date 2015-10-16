@@ -267,7 +267,10 @@ function rooms_availability_constraints_remove_submit($form, &$form_state) {
     drupal_array_set_nested_value($form_state['field'], $moving_element['#parents'], $moving_element_field);
   }
 
-  $form_state['rooms_unit_type']->rooms_constraints_range = array();
+  // Replace the deleted entity with an empty one. This helps to ensure that
+  // trying to add a new entity won't ressurect a deleted entity from the
+  // trash bin.
+  $form_state[$form['#entity_type']]->rooms_constraints_range = array();
 
   // Then remove the last item. But we must not go negative.
   if ($field_state['items_count'] > 0) {
