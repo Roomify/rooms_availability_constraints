@@ -515,8 +515,10 @@ function rooms_availability_range_validate($element, &$form_state) {
       $parents = array_merge($element['#parents'], array('constraint_type'));
       drupal_array_set_nested_value($form_state['values'], $parents, ROOMS_AVAILABILITY_CONSTRAINTS_IF_STARTS, TRUE);
 
+      $start_day = isset($element['#value']['group_conditions']['booking_if_start_day']) ? $element['#value']['group_conditions']['booking_if_start_day'] : 1;
+
       $parents = array_merge($element['#parents'], array('start_day'));
-      drupal_array_set_nested_value($form_state['values'], $parents, $element['#value']['group_conditions']['booking_if_start_day'], TRUE);      
+      drupal_array_set_nested_value($form_state['values'], $parents, $start_day, TRUE);      
     }
     else {
       $parents = array_merge($element['#parents'], array('constraint_type'));
