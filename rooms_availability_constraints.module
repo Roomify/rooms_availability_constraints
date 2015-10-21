@@ -525,12 +525,12 @@ function rooms_availability_range_validate($element, &$form_state) {
       drupal_array_set_nested_value($form_state['values'], $parents, ROOMS_AVAILABILITY_CONSTRAINTS_NO_DAY, TRUE);
     }
 
-    if (isset($element['#value']['group_conditions']['minimum_stay_nights']) && $element['#value']['group_conditions']['minimum_stay']) {
+    if (isset($element['#value']['group_conditions']['minimum_stay_nights']) && $element['#value']['group_conditions']['minimum_stay_nights'] != '' && $element['#value']['group_conditions']['minimum_stay']) {
       $parents = array_merge($element['#parents'], array('minimum_stay'));
       drupal_array_set_nested_value($form_state['values'], $parents, $element['#value']['group_conditions']['minimum_stay_nights'], TRUE);
     }
 
-    if (isset($element['#value']['group_conditions']['maximum_stay_nights']) && $element['#value']['group_conditions']['maximum_stay']) {
+    if (isset($element['#value']['group_conditions']['maximum_stay_nights']) && $element['#value']['group_conditions']['maximum_stay_nights'] != '' && $element['#value']['group_conditions']['maximum_stay']) {
       $parents = array_merge($element['#parents'], array('maximum_stay'));
       drupal_array_set_nested_value($form_state['values'], $parents, $element['#value']['group_conditions']['maximum_stay_nights'], TRUE);
     }
