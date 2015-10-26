@@ -481,66 +481,68 @@ function rooms_availability_range_form_ajax_callback($form, &$form_state) {
  * Validation callback for rooms_availability_range Form API element.
  */
 function rooms_availability_range_validate($element, &$form_state) {
-  if (isset($element['#value']['group_conditions']['period'])) {
-    if ($element['#value']['group_conditions']['period'] == 'always') {
-      $parents = array_merge($element['#parents'], array('start_date'));
-      drupal_array_set_nested_value($form_state['values'], $parents, '1970-01-01', TRUE);
+  if (isset($element['#value']['group_conditions'])) {
+    if (isset($element['#value']['group_conditions']['period'])) {
+      if ($element['#value']['group_conditions']['period'] == 'always') {
+        $parents = array_merge($element['#parents'], array('start_date'));
+        drupal_array_set_nested_value($form_state['values'], $parents, '1970-01-01', TRUE);
 
-      $parents = array_merge($element['#parents'], array('end_date'));
-      drupal_array_set_nested_value($form_state['values'], $parents, '2999-12-31', TRUE);
+        $parents = array_merge($element['#parents'], array('end_date'));
+        drupal_array_set_nested_value($form_state['values'], $parents, '2999-12-31', TRUE);
 
-      $parents = array_merge($element['#parents'], array('always'));
-      drupal_array_set_nested_value($form_state['values'], $parents, 1, TRUE);
+        $parents = array_merge($element['#parents'], array('always'));
+        drupal_array_set_nested_value($form_state['values'], $parents, 1, TRUE);
+      }
+      elseif ($element['#value']['group_conditions']['period'] == 'dates') {
+        $parents = array_merge($element['#parents'], array('group_conditions', 'start_date'));
+        $start_date = drupal_array_get_nested_value($form_state['values'], $parents);
+
+        $parents = array_merge($element['#parents'], array('group_conditions', 'end_date'));
+        $end_date = drupal_array_get_nested_value($form_state['values'], $parents);
+
+        $parents = array_merge($element['#parents'], array('start_date'));
+        drupal_array_set_nested_value($form_state['values'], $parents, $start_date, TRUE);
+
+        $parents = array_merge($element['#parents'], array('end_date'));
+        drupal_array_set_nested_value($form_state['values'], $parents, $end_date, TRUE);
+
+        $parents = array_merge($element['#parents'], array('always'));
+        drupal_array_set_nested_value($form_state['values'], $parents, 0, TRUE);
+      }
     }
-    elseif ($element['#value']['group_conditions']['period'] == 'dates') {
-      $parents = array_merge($element['#parents'], array('group_conditions', 'start_date'));
-      $start_date = drupal_array_get_nested_value($form_state['values'], $parents);
 
-      $parents = array_merge($element['#parents'], array('group_conditions', 'end_date'));
-      $end_date = drupal_array_get_nested_value($form_state['values'], $parents);
+    if ($element['#value']['group_conditions']['operation'] == 1) {
+      if (isset($element['#value']['group_conditions']['booking_if_start']) && $element['#value']['group_conditions']['booking_if_start']) {
+        $parents = array_merge($element['#parents'], array('constraint_type'));
+        drupal_array_set_nested_value($form_state['values'], $parents, ROOMS_AVAILABILITY_CONSTRAINTS_IF_STARTS, TRUE);
 
-      $parents = array_merge($element['#parents'], array('start_date'));
-      drupal_array_set_nested_value($form_state['values'], $parents, $start_date, TRUE);
+        $start_day = isset($element['#value']['group_conditions']['booking_if_start_day']) ? $element['#value']['group_conditions']['booking_if_start_day'] : 1;
 
-      $parents = array_merge($element['#parents'], array('end_date'));
-      drupal_array_set_nested_value($form_state['values'], $parents, $end_date, TRUE);
+        $parents = array_merge($element['#parents'], array('start_day'));
+        drupal_array_set_nested_value($form_state['values'], $parents, $start_day, TRUE);      
+      }
+      else {
+        $parents = array_merge($element['#parents'], array('constraint_type'));
+        drupal_array_set_nested_value($form_state['values'], $parents, ROOMS_AVAILABILITY_CONSTRAINTS_NO_DAY, TRUE);
+      }
 
-      $parents = array_merge($element['#parents'], array('always'));
-      drupal_array_set_nested_value($form_state['values'], $parents, 0, TRUE);
+      if (isset($element['#value']['group_conditions']['minimum_stay_nights']) && $element['#value']['group_conditions']['minimum_stay_nights'] != '' && $element['#value']['group_conditions']['minimum_stay']) {
+        $parents = array_merge($element['#parents'], array('minimum_stay'));
+        drupal_array_set_nested_value($form_state['values'], $parents, $element['#value']['group_conditions']['minimum_stay_nights'], TRUE);
+      }
+
+      if (isset($element['#value']['group_conditions']['maximum_stay_nights']) && $element['#value']['group_conditions']['maximum_stay_nights'] != '' && $element['#value']['group_conditions']['maximum_stay']) {
+        $parents = array_merge($element['#parents'], array('maximum_stay'));
+        drupal_array_set_nested_value($form_state['values'], $parents, $element['#value']['group_conditions']['maximum_stay_nights'], TRUE);
+      }
     }
-  }
-
-  if ($element['#value']['group_conditions']['operation'] == 1) {
-    if (isset($element['#value']['group_conditions']['booking_if_start']) && $element['#value']['group_conditions']['booking_if_start']) {
+    elseif ($element['#value']['group_conditions']['operation'] == 2) {
       $parents = array_merge($element['#parents'], array('constraint_type'));
-      drupal_array_set_nested_value($form_state['values'], $parents, ROOMS_AVAILABILITY_CONSTRAINTS_IF_STARTS, TRUE);
-
-      $start_day = isset($element['#value']['group_conditions']['booking_if_start_day']) ? $element['#value']['group_conditions']['booking_if_start_day'] : 1;
+      drupal_array_set_nested_value($form_state['values'], $parents, ROOMS_AVAILABILITY_CONSTRAINTS_MUST_START, TRUE);
 
       $parents = array_merge($element['#parents'], array('start_day'));
-      drupal_array_set_nested_value($form_state['values'], $parents, $start_day, TRUE);      
+      drupal_array_set_nested_value($form_state['values'], $parents, $element['#value']['group_conditions']['booking_must_start'], TRUE);
     }
-    else {
-      $parents = array_merge($element['#parents'], array('constraint_type'));
-      drupal_array_set_nested_value($form_state['values'], $parents, ROOMS_AVAILABILITY_CONSTRAINTS_NO_DAY, TRUE);
-    }
-
-    if (isset($element['#value']['group_conditions']['minimum_stay_nights']) && $element['#value']['group_conditions']['minimum_stay_nights'] != '' && $element['#value']['group_conditions']['minimum_stay']) {
-      $parents = array_merge($element['#parents'], array('minimum_stay'));
-      drupal_array_set_nested_value($form_state['values'], $parents, $element['#value']['group_conditions']['minimum_stay_nights'], TRUE);
-    }
-
-    if (isset($element['#value']['group_conditions']['maximum_stay_nights']) && $element['#value']['group_conditions']['maximum_stay_nights'] != '' && $element['#value']['group_conditions']['maximum_stay']) {
-      $parents = array_merge($element['#parents'], array('maximum_stay'));
-      drupal_array_set_nested_value($form_state['values'], $parents, $element['#value']['group_conditions']['maximum_stay_nights'], TRUE);
-    }
-  }
-  elseif ($element['#value']['group_conditions']['operation'] == 2) {
-    $parents = array_merge($element['#parents'], array('constraint_type'));
-    drupal_array_set_nested_value($form_state['values'], $parents, ROOMS_AVAILABILITY_CONSTRAINTS_MUST_START, TRUE);
-
-    $parents = array_merge($element['#parents'], array('start_day'));
-    drupal_array_set_nested_value($form_state['values'], $parents, $element['#value']['group_conditions']['booking_must_start'], TRUE);
   }
 }
 
