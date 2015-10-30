@@ -1,17 +1,43 @@
-.group--conditions{
-  float: left;
-  margin-right: 20px;
-  margin-bottom: 10px;
+.field-widget-rooms-availability-constraints-range .condition-title,
+.field-widget-rooms-availability-constraints-range .form-item {
+  margin-bottom: 5px !important;
 }
-.group--limits {
-  float: right;
-  margin-bottom: 10px;
-}
+
 .field-widget-rooms-availability-constraints-range .rooms-availability-range--remove-button {
   clear: both;
   float: right;
 }
 
-.field-widget-rooms-availability-constraints-range .container-inline {
-  clear: both;
+.field-widget-rooms-availability-constraints-range input[name^="add_min_max"] {
+  display: block !important;
+}
+
+.field-widget-rooms-availability-constraints-range .ajax-progress {
+  float: right;
+  margin: 5px 10px 0 0;
+}
+
+.field-widget-rooms-availability-constraints-range .group-conditions-booking-if-start,
+.field-widget-rooms-availability-constraints-range .group-conditions-maximum-stay,
+.field-widget-rooms-availability-constraints-range .group-conditions-minimum-stay,
+.field-widget-rooms-availability-constraints-range .group-conditions-period {
+  clear: both !important;
+}
+
+.field-widget-rooms-availability-constraints-range .group-conditions-booking-must-start .field-prefix,
+.field-widget-rooms-availability-constraints-range .group-conditions-booking-if-start,
+.field-widget-rooms-availability-constraints-range .group-conditions-period label,
+.field-widget-rooms-availability-constraints-range .group-conditions-maximum-stay,
+.field-widget-rooms-availability-constraints-range .group-conditions-minimum-stay {
+  float: left !important;
+  margin-right: 12px !important;
+}
+
+.field-widget-rooms-availability-constraints-range .group-conditions-maximum-stay-nights,
+.field-widget-rooms-availability-constraints-range .group-conditions-minimum-stay-nights {
+  float: left;
+}
+
+.field-widget-rooms-availability-constraints-range .rooms-date-range .form-type-textfield label {
+  display: none !important;
 }

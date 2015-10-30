@@ -3,7 +3,7 @@
 /**
  * Filter by group_size and group_size_children.
  */
-class AvailabilityAgentDurationFilter extends AvailabilityAgentCommonFilter {
+class AvailabilityAgentDurationFilter extends AvailabilityAgentFilterBase {
 
   const MINIMUM_DURATION_FILTER = 'minimum';
   const MAXIMUM_DURATION_FILTER = 'maximum';
@@ -157,9 +157,9 @@ class AvailabilityAgentDurationFilter extends AvailabilityAgentCommonFilter {
     $query->propertyCondition('bookable', 1);
     if (!empty($this->excluded_units)) {
       $query->propertyCondition('unit_id', $this->excluded_units, 'NOT IN');
-      if (!empty($this->excluded_unit_types)) {
-        $query->propertyCondition('bundle', $this->excluded_unit_types, 'NOT IN');
-      }
+    }
+    if (!empty($this->excluded_unit_types)) {
+      $query->propertyCondition('type', $this->excluded_unit_types, 'NOT IN');
     }
   }
 
