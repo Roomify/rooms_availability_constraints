@@ -474,7 +474,7 @@ function rooms_availability_range_process($element, $form_state, $complete_form)
 function rooms_availability_range_form_ajax_callback($form, &$form_state) {
   $delta = $form_state['triggering_element']['#parents'][2];
 
-  return $form['rooms_constraints_range']['und'][$delta]['group_conditions'];
+  return $form['rooms_constraints_range'][LANGUAGE_NONE][$delta]['group_conditions'];
 }
 
 /**
