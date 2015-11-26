@@ -311,7 +311,7 @@ function rooms_availability_range_process($element, $form_state, $complete_form)
 
       $element['group_conditions']['minimum_stay_nights'] = array(
         '#type' => 'textfield',
-        '#field_suffix' => t('nights'),
+        '#field_suffix' => t('days'),
         '#size' => 3,
         '#required' => TRUE,
         '#prefix' => '<div class="group-conditions-minimum-stay-nights">',
@@ -339,7 +339,7 @@ function rooms_availability_range_process($element, $form_state, $complete_form)
 
       $element['group_conditions']['maximum_stay_nights'] = array(
         '#type' => 'textfield',
-        '#field_suffix' => t('nights'),
+        '#field_suffix' => t('days'),
         '#size' => 3,
         '#required' => TRUE,
         '#prefix' => '<div class="group-conditions-maximum-stay-nights">',
