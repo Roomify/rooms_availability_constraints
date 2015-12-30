@@ -11,6 +11,9 @@ define('ROOMS_AVAILABILITY_CONSTRAINTS_MUST_START', 'must');
 define('ROOMS_AVAILABILITY_CONSTRAINTS_IF_STARTS', 'if');
 define('ROOMS_AVAILABILITY_CONSTRAINTS_NO_DAY', 'none');
 
+use Drupal\bat\MinMaxConstraint;
+use Drupal\bat\CheckInDayConstraint;
+
 /**
  * Implements hook_menu().
  */
@@ -73,10 +76,10 @@ function rooms_availability_constraints_remove_js() {
 /**
  * Implements hook_form_FORM_ID_alter().
  *
- * FORM_ID = rooms_unit_type_form
+ * FORM_ID = bat_unit_type_form
  */
-function rooms_availability_constraints_form_rooms_unit_type_form_alter(&$form, &$form_state, $form_id) {
-  $unit_type = $form_state['rooms_unit_type'];
+function rooms_availability_constraints_form_bat_unit_type_form_alter(&$form, &$form_state, $form_id) {
+  $unit_type = $form_state['bat_unit_type'];
   // Unit availability information for administrators.
   $form['availability_constraints'] = array(
     '#type' => 'fieldset',
@@ -110,24 +113,24 @@ function rooms_availability_constraints_form_rooms_unit_type_form_alter(&$form, 
     $form['rooms_constraints_range']['#access'] = FALSE;
   }
 
-  $form['#submit'][] = 'rooms_availability_constraints_rooms_unit_type_form_submit';
+  $form['actions']['submit']['#submit'][] = 'rooms_availability_constraints_bat_unit_type_form_submit';
 }
 
 /**
- * Submit handler for rooms_unit_type_form.
+ * Submit handler for bat_unit_type_form.
  */
-function rooms_availability_constraints_rooms_unit_type_form_submit($form, &$form_state) {
-  $unit_type = $form_state['rooms_unit_type'];
+function rooms_availability_constraints_bat_unit_type_form_submit($form, &$form_state) {
+  $unit_type = $form_state['bat_unit_type'];
 
   if (variable_get('rooms_availability_constraints_unit_' . $unit_type->type, 0) == 0
     && $form_state['values']['rooms_availability_range_unit'] == 1) {
-    rooms_availability_constraints_add_availability_range_field('rooms_unit', $unit_type->type);
+    rooms_availability_constraints_add_availability_range_field('bat_unit', $unit_type->type);
   }
   elseif (variable_get('rooms_availability_constraints_unit_' . $unit_type->type, 0) == 1
     && $form_state['values']['rooms_availability_range_unit'] == 0) {
     field_delete_instance(array(
       'field_name' => 'rooms_constraints_range',
-      'entity_type' => 'rooms_unit',
+      'entity_type' => 'bat_unit',
       'bundle' => $unit_type->type,
     ));
   }
@@ -135,7 +138,7 @@ function rooms_availability_constraints_rooms_unit_type_form_submit($form, &$for
   if (variable_get('rooms_availability_constraints_type_' . $unit_type->type, 0) == 1
     && $form_state['values']['rooms_availability_range_type'] == 0) {
     $unit_type->rooms_constraints_range[LANGUAGE_NONE] = array();
-    entity_save('rooms_unit_type', $unit_type);
+    entity_save('bat_unit_type', $unit_type);
   }
 
   variable_set('rooms_availability_constraints_unit_' . $unit_type->type, $form_state['values']['rooms_availability_range_unit']);
@@ -179,7 +182,7 @@ function rooms_availability_constraints_add_availability_range_field($entity_typ
  * Implements hook_entity_delete().
  */
 function rooms_availability_constraints_entity_delete($entity, $type) {
-  if ($type == 'rooms_unit_type') {
+  if ($type == 'bat_unit_type') {
     variable_del('rooms_availability_constraints_unit_' . $entity->type);
     variable_del('rooms_availability_constraints_type_' . $entity->type);
   }
@@ -215,7 +218,7 @@ function rooms_availability_constraints_element_info() {
  * Generates the 'rooms_availability_range' Form API element.
  */
 function rooms_availability_range_process($element, $form_state, $complete_form) {
-  $range = rooms_date_range_fields();
+  $range = bat_date_range_fields();
 
   $always_id = drupal_html_id('rooms-constraints-range-always');
   $constraint_type_id = drupal_html_id('rooms-constraints-range-type');
@@ -374,7 +377,7 @@ function rooms_availability_range_process($element, $form_state, $complete_form)
             '#' . $always_id . ' input' => array('checked' => FALSE),
           ),
         ),
-      ) + $range['rooms_start_date'];
+      ) + $range['bat_start_date'];
 
       $element['group_conditions']['end_date'] = array(
         '#title' => t('End date'),
@@ -385,7 +388,7 @@ function rooms_availability_range_process($element, $form_state, $complete_form)
             '#' . $always_id . ' input' => array('checked' => FALSE),
           ),
         ),
-      ) + $range['rooms_end_date'];
+      ) + $range['bat_end_date'];
     }
 
     $element['group_conditions']['booking_if_start'] = array(
@@ -575,4 +578,34 @@ function rooms_availability_constraints_weekdays() {
 function rooms_availability_constraints_get_weekday($day) {
   $weekdays = rooms_availability_constraints_weekdays();
   return isset($weekdays[$day]) ? $weekdays[$day] : '';
+}
+
+/**
+ * Implements hook_bat_unit_constraints().
+ */
+function rooms_availability_constraints_bat_unit_constraints($unit) {
+  $field_constraints = field_get_items('bat_unit', $unit, 'rooms_constraints_range');
+
+  $constraints = array();
+
+  if (!empty($field_constraints)) {
+    foreach ($field_constraints as $field_constraint) {
+      if ($field_constraint['constraint_type'] == ROOMS_AVAILABILITY_CONSTRAINTS_MUST_START) {
+        $constraint = new CheckInDayConstraint(array($unit), $field_constraint['start_day']);
+        $constraints[] = $constraint;
+      }
+      else {
+        $start_date = new DateTime($field_constraint['start_date']);
+        $end_date = new DateTime($field_constraint['end_date']);
+        $minimum_stay = $field_constraint['minimum_stay'];
+        $maximum_stay = $field_constraint['maximum_stay'];
+        $start_day = $field_constraint['start_day'];
+
+        $constraint = new MinMaxConstraint(array($unit), $minimum_stay, $maximum_stay, $start_date, $end_date, $start_day);
+        $constraints[] = $constraint;
+      }
+    }
+  }
+
+  return $constraints;
 }

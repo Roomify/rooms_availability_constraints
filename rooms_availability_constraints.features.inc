@@ -6,9 +6,9 @@
  */
 
 /**
- * Implements hook_features_pipe_COMPONENT_alter() for rooms_unit_type component.
+ * Implements hook_features_pipe_COMPONENT_alter() for bat_unit_type component.
  */
-function rooms_availability_constraints_features_pipe_rooms_unit_type_alter(&$pipe, $data, $export) {
+function rooms_availability_constraints_features_pipe_bat_unit_type_alter(&$pipe, $data, $export) {
   if (!empty($data)) {
     $variables = array(
       'rooms_availability_constraints_unit',
@@ -24,11 +24,11 @@ function rooms_availability_constraints_features_pipe_rooms_unit_type_alter(&$pi
       $export_var = 'field';
     }
 
-    foreach ($data as $rooms_unit_type) {
+    foreach ($data as $bat_unit_type) {
       foreach ($variables as $variable_name) {
-        $pipe['variable'][] = "{$variable_name}_{$rooms_unit_type}";
+        $pipe['variable'][] = "{$variable_name}_{$bat_unit_type}";
       }
-      $pipe[$export_var][] = 'rooms_unit_type-rooms_unit_type-rooms_constraints_range';
+      $pipe[$export_var][] = 'bat_unit_type-bat_unit_type-rooms_constraints_range';
     }
   }
 }

@@ -68,14 +68,14 @@ function rooms_availability_constraints_field_schema($field) {
  */
 function rooms_availability_constraints_install() {
   field_info_cache_clear();
-  rooms_availability_constraints_add_availability_range_field('rooms_unit_type', 'rooms_unit_type');
+  rooms_availability_constraints_add_availability_range_field('bat_unit_type', 'bat_unit_type');
 }
 
 /**
  * Implements hook_uninstall().
  */
 function rooms_availability_constraints_uninstall() {
-  foreach (rooms_unit_get_types() as $type) {
+  foreach (bat_unit_get_types() as $type) {
     variable_del('rooms_availability_constraints_unit_' . $type->type);
     variable_del('rooms_availability_constraints_type_' . $type->type);
   }

@@ -27,8 +27,7 @@ Simply download and activate the module.
 
 Rooms Availability constraints requires:
 
-rooms_availability (>=1.4)
-rooms_booking (>=1.4)
+BAT
 
 CONFIGURATION
 -------------

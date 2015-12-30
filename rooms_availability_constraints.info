@@ -1,10 +1,8 @@
 name = Rooms Availability Constraints
-description = Manages availability constraints for Rooms.
+description = Manages availability constraints for BAT.
 core = 7.x
 
 package = Rooms
 
-dependencies[] = rooms_availability
-dependencies[] = rooms_booking
-
-files[] = includes/rooms_availability_constraints.availability_agent_range_filter.inc
+dependencies[] = bat
+dependencies[] = bat_unit
