@@ -454,7 +454,7 @@ function rooms_availability_range_process($element, $form_state, $complete_form)
             '#' . $always_id . ' input' => array('checked' => FALSE),
           ),
         ),
-      ) + $range['rooms_start_date'];
+      ) + $range['bat_start_date'];
 
       $element['group_conditions']['end_date'] = array(
         '#title' => t('End date'),
@@ -465,7 +465,7 @@ function rooms_availability_range_process($element, $form_state, $complete_form)
             '#' . $always_id . ' input' => array('checked' => FALSE),
           ),
         ),
-      ) + $range['rooms_end_date'];
+      ) + $range['bat_end_date'];
     }
   }
 
@@ -590,13 +590,14 @@ function rooms_availability_constraints_bat_unit_constraints($unit) {
 
   if (!empty($field_constraints)) {
     foreach ($field_constraints as $field_constraint) {
+      $start_date = new DateTime($field_constraint['start_date']);
+      $end_date = new DateTime($field_constraint['end_date']);
+
       if ($field_constraint['constraint_type'] == ROOMS_AVAILABILITY_CONSTRAINTS_MUST_START) {
-        $constraint = new CheckInDayConstraint(array($unit), $field_constraint['start_day']);
+        $constraint = new CheckInDayConstraint(array($unit), $field_constraint['start_day'], $start_date, $end_date);
         $constraints[] = $constraint;
       }
       else {
-        $start_date = new DateTime($field_constraint['start_date']);
-        $end_date = new DateTime($field_constraint['end_date']);
         $minimum_stay = $field_constraint['minimum_stay'];
         $maximum_stay = $field_constraint['maximum_stay'];
         $start_day = $field_constraint['start_day'];
