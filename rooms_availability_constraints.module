@@ -602,7 +602,7 @@ function rooms_availability_constraints_bat_unit_constraints($unit) {
         $maximum_stay = $field_constraint['maximum_stay'];
         $start_day = $field_constraint['start_day'];
 
-        $constraint = new MinMaxConstraint(array($unit), $minimum_stay, $maximum_stay, $start_date, $end_date, $start_day);
+        $constraint = new MinMaxDaysConstraint(array($unit), $minimum_stay, $maximum_stay, $start_date, $end_date, $start_day);
         $constraints[] = $constraint;
       }
     }
